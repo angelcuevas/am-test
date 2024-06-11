@@ -7,10 +7,18 @@ const petsRouter = require('./routes/pets.router.js');
 const adoptionsRouter = require('./routes/adoption.router.js');
 const sessionsRouter = require('./routes/sessions.router.js');
 const { mongoUri, port } = require('./config/config.js');
+const handlebars = require('express-handlebars');
+const { viewsRouter } = require('./routes/views.router.js');
 
 const app = express();
 const PORT = port;
 const connection = mongoose.connect(mongoUri)
+
+/** VIEWS*/
+app.engine('handlebars', handlebars.engine())
+app.set('views', `${__dirname}/views`);
+app.set('view engine', 'handlebars')
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,5 +27,7 @@ app.use('/api/users',usersRouter);
 app.use('/api/pets',petsRouter);
 app.use('/api/adoptions',adoptionsRouter);
 app.use('/api/sessions',sessionsRouter);
+app.use('/', viewsRouter)
+
 
 app.listen(PORT,()=>console.log(`Listening on ${PORT} with stuff changed ANOTHER CHANGE`))
